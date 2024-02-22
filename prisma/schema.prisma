@@ -10,13 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-id          Int     @id @default(autoincrement()) @unique
-email       String @unique
-name        String?
-password    String
-position    Int?
-attending   String?
+model User {
+  id        Int     @id @unique @default(autoincrement())
+  email     String  @unique
+  name      String?
+  password  String
+  position  Int?
+  attending String?
 }
 
 model Message {
@@ -27,11 +27,19 @@ model Message {
 }
 
 model Done {
-  id        Int      @id @default(autoincrement())
-  number    String
-  type      String
-  start     DateTime
-  end       DateTime @default(now())
-  caller    String
-  customer  String?
+  id       Int      @id @default(autoincrement())
+  number   String
+  type     String
+  start    DateTime
+  end      DateTime @default(now())
+  caller   String
+  customer String?
+}
+
+model TipoAtencion {
+  id           Int     @id @default(autoincrement())
+  type         String  @unique
+  priority     Int
+  displayName String
+  active       Boolean @default(false)
 }

@@ -8,6 +8,7 @@ import { PrismaService } from './prisma.service';
 import { ChatGateway } from './chat/chat.gateway';
 import { MessagesModule } from './messages/messages.module';
 import { DoneModule } from './done/done.module';
+import { TipoAtencionModule } from './tipo-atencion/tipo-atencion.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { DoneModule } from './done/done.module';
     UserModule,
     AuthModule,
     MessagesModule,
-    DoneModule
+    DoneModule,
+    TipoAtencionModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, ChatGateway],

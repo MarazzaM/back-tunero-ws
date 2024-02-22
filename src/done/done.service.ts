@@ -25,7 +25,7 @@ export class DoneService {
   }
 
   delete(id: number) {
-    return this.prisma.message.delete({ where: { id } });
+    return this.prisma.done.delete({ where: { id } });
   }
 
 }

@@ -5,8 +5,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('dto')
-@ApiTags('dto')
+@Controller('done')
+@ApiTags('done')
 export class DoneController {
   constructor(private readonly doneService: DoneService) {}
 

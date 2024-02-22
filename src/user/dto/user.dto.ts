@@ -1,4 +1,4 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsString, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -10,6 +10,7 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
+  @IsOptional() // Make the property optional
   @IsString()
   attending?: string;
 }
