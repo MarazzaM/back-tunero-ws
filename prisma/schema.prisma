@@ -37,9 +37,11 @@ model Done {
 }
 
 model TipoAtencion {
-  id           Int     @id @default(autoincrement())
-  type         String  @unique
-  priority     Int
+  id          Int     @id @default(autoincrement())
+  type        String  @unique
+  priority    Int
   displayName String
-  active       Boolean @default(false)
+  active      Boolean @default(false)
+  color       String? @default("f6f6f6")
+  colorBg     String? @default("00b941")
 }
