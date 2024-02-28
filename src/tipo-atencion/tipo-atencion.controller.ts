@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { TipoAtencionService } from './tipo-atencion.service';
 import { TipoAtencionDTO } from './dto/tipo-atencion.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -30,5 +38,10 @@ export class TipoAtencionController {
   findOne(@Param('id') id: string) {
     return this.tipoAtencionService.findOne(+id);
   }
-  
+
+  @Patch(':id')
+  @UseGuards(JwtGuard)
+  async update(@Param('id') id: string, @Body() dto: TipoAtencionDTO) {
+    return this.tipoAtencionService.update(+id, dto);
+  }
 }

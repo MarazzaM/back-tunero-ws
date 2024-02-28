@@ -24,6 +24,13 @@ export class TipoAtencionService {
     return this.prisma.tipoAtencion.findUnique({ where: { id } });
   }
 
+  async update(id: number, dto: TipoAtencionDTO) {
+    return this.prisma.tipoAtencion.update({
+      where: { id },
+      data: dto,
+    });
+  }
+  
   delete(id: number) {
     return this.prisma.tipoAtencion.delete({ where: { id } });
   }
