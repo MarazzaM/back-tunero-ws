@@ -81,6 +81,7 @@ export class ChatGateway {
       const newTicket = await this.chatService.generateTicket(type, priority);
   
       // Return the generated ticket information
+      client.emit('generatedTicket', newTicket);
       return newTicket;
     } catch (error) {
       console.error('Error handling generateTicket:', error);
