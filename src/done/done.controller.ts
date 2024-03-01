@@ -31,4 +31,11 @@ export class DoneController {
     return this.doneService.findOne(+id);
   }
   
+  @Get('/last/:type')
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  findLastByType(@Param('type') type: string) {
+    return this.doneService.findLastByType(type);
+  }
+  
 }

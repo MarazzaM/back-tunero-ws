@@ -9,7 +9,7 @@ import { ChatGateway } from './chat/chat.gateway';
 import { MessagesModule } from './messages/messages.module';
 import { DoneModule } from './done/done.module';
 import { TipoAtencionModule } from './tipo-atencion/tipo-atencion.module';
-
+import { ChatModule } from './chat/chat.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,7 +19,8 @@ import { TipoAtencionModule } from './tipo-atencion/tipo-atencion.module';
     AuthModule,
     MessagesModule,
     DoneModule,
-    TipoAtencionModule
+    TipoAtencionModule,
+    ChatModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, ChatGateway],

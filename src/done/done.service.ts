@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { DoneDTO } from './dto/done.dto';
 import { PrismaService } from 'src/prisma.service';
 
-
 @Injectable()
 export class DoneService {
   constructor(private prisma: PrismaService) {}
@@ -10,7 +9,6 @@ export class DoneService {
   create(doneDTO: DoneDTO) {
     return this.prisma.done.create({ data: doneDTO });
   }
-
 
   findAll() {
     return this.prisma.done.findMany();
@@ -28,4 +26,11 @@ export class DoneService {
     return this.prisma.done.delete({ where: { id } });
   }
 
+  findLastByType(type: string) {
+    return this.prisma.done.findFirst({
+      where: { type },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+  
 }

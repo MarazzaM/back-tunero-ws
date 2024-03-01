@@ -52,5 +52,20 @@ export class MessagesService {
       }
     }
   }
+
+  async findLastMessageByType(type: string) {
+    try {
+      // Query the Messages table to find the last message of the specified type
+      const lastMessage = await this.prisma.message.findFirst({
+        where: { type },
+        orderBy: { timestamp: 'desc' }, // Order by createdAt in descending order to get the last message
+      });
+
+      return lastMessage; // Return the last message
+    } catch (error) {
+      console.error('Error fetching last message by type:', error);
+      return null; // Return null if an error occurs
+    }
+  }
   
 }

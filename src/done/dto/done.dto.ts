@@ -23,4 +23,9 @@ export class DoneDTO {
   @IsOptional()
   @IsString()
   customer: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsDate()
+  createdAt: Date;
 }

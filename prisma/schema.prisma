@@ -27,13 +27,14 @@ model Message {
 }
 
 model Done {
-  id       Int      @id @default(autoincrement())
-  number   String
-  type     String
-  start    DateTime
-  end      DateTime @default(now())
-  caller   String
-  customer String?
+  id        Int      @id @default(autoincrement())
+  number    String
+  type      String
+  start     DateTime
+  end       DateTime @default(now())
+  caller    String
+  customer  String?
+  createdAt DateTime @default(now())
 }
 
 model TipoAtencion {
