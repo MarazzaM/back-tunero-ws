@@ -25,7 +25,7 @@ export class ChatService {
     return lastTicket; // Return the last ticket
   }
 
-  async generateTicket(type: string) {
+  async generateTicket(type: string, priority: number) {
     try {
       // Fetch the last ticket of the specified type from the Messages table
       const lastMessage = await this.findLastMessageByType(type);
@@ -47,6 +47,7 @@ export class ChatService {
         data: {
           type: type,
           number: newTicketNumber,
+          priority: priority
         },
       });
 

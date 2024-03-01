@@ -15,6 +15,11 @@ export class TipoAtencionService {
   findAll() {
     return this.prisma.tipoAtencion.findMany();
   }
+
+  findActive() {
+    return this.prisma.tipoAtencion.findMany({ where: { active: true } });
+  }
+  
   
   findAllUser(id: number) {
     return this.prisma.tipoAtencion.findMany({ where: { priority: id } });

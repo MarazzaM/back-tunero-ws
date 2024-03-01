@@ -29,29 +29,20 @@ export class MessagesService {
   }
 
   async findPriorityMessage() {
-    // Find the message with the smallest ID and type equal to "priority"
+    // Find the oldest message with priority and order by priority then by timestamp
     const priorityMessage = await this.prisma.message.findFirst({
-      where: { type: 'priority' },
-      orderBy: { id: 'asc' },
+      where: { priority: { not: null } }, // Filter by priority not being null
+      orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }], // Order by priority descending and timestamp ascending
     });
   
     if (priorityMessage) {
       return priorityMessage;
     } else {
-      // If no priority message is found, find the message with the smallest ID and type equal to "normal"
-      const normalMessage = await this.prisma.message.findFirst({
-        where: { type: 'normal' },
-        orderBy: { id: 'asc' },
-      });
-  
-      if (normalMessage) {
-        return normalMessage;
-      } else {
-        // If no normal message is found either, return a message indicating that there are no more people in the queue
-        return { content: "No more people in queue" };
-      }
+      // If no priority message is found, return a message indicating that there are no more people in the queue
+      return { content: "No more people in queue" };
     }
   }
+  
 
   async findLastMessageByType(type: string) {
     try {

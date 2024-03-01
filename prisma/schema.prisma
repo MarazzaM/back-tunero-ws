@@ -24,6 +24,7 @@ model Message {
   number    String
   type      String
   timestamp DateTime @default(now())
+  priority  Int?
 }
 
 model Done {

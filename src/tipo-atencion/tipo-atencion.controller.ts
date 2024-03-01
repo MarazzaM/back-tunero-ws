@@ -32,6 +32,12 @@ export class TipoAtencionController {
     return this.tipoAtencionService.findAll();
   }
 
+  @Get('/active')
+  // @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  findActive() {
+    return this.tipoAtencionService.findActive();
+  }
   @Get(':id')
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
@@ -44,4 +50,5 @@ export class TipoAtencionController {
   async update(@Param('id') id: string, @Body() dto: TipoAtencionDTO) {
     return this.tipoAtencionService.update(+id, dto);
   }
+
 }

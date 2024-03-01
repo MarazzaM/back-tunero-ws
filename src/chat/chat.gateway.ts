@@ -38,6 +38,7 @@ export class ChatGateway {
     console.log('Llamando turno:', callerId);
 
     const savedMessage = await this.messagesService.findPriorityMessage();
+    console.log(savedMessage)
     const attending = JSON.stringify(savedMessage);
 
     const appointmentInfo = { callerId, appointment: savedMessage };
@@ -57,14 +58,14 @@ export class ChatGateway {
   async handleGenerateTicket(client: any, payload) {
     try {
       const { type } = payload;
-      console.log('aca')
-      console.log(type)
+      const { priority } = payload;
+
       // Fetch the last message of the specified type from the Messages table
       const lastMessage = await this.chatService.findLastMessageByType(type);
   
       // If a message of the specified type exists, increment its ticket number by 1 and save it
       if (lastMessage) {
-        const newTicket = await this.chatService.generateTicket(type); // Generate a new ticket
+        const newTicket = await this.chatService.generateTicket(type, priority); // Generate a new ticket
         return newTicket;
       }
   
@@ -77,7 +78,7 @@ export class ChatGateway {
       }
   
       // If no message or ticket of the specified type exists, generate a new ticket
-      const newTicket = await this.chatService.generateTicket(type);
+      const newTicket = await this.chatService.generateTicket(type, priority);
   
       // Return the generated ticket information
       return newTicket;

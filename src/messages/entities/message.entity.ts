@@ -2,6 +2,7 @@
 
 import { Message } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
 export class MessageEntity implements Message {
   @ApiProperty()
@@ -15,4 +16,8 @@ export class MessageEntity implements Message {
 
   @ApiProperty()
   timestamp: Date;
+
+  @ApiProperty()
+  @IsOptional()
+  priority: number;
 }
