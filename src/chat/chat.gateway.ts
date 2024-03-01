@@ -34,25 +34,34 @@ export class ChatGateway {
     this.server.emit('message', savedMessage);
   }
   @SubscribeMessage('callAppointment')
-  async handleLlamarTurno(client: any, callerId): Promise<void> {
+  async handleLlamarTurno(
+    client: any,
+    { callerId, position }: { callerId: any; position: string }
+  ): Promise<void> {
     console.log('Llamando turno:', callerId);
-
+  
     const savedMessage = await this.messagesService.findPriorityMessage();
-    console.log(savedMessage)
+    console.log(savedMessage);
     const attending = JSON.stringify(savedMessage);
-
-    const appointmentInfo = { callerId, appointment: savedMessage };
+  
+    const appointmentInfo = {
+      callerId,
+      appointment: savedMessage,
+      position: position, // Ensure position is correctly assigned here
+    };
+  
     if ('id' in savedMessage) {
       console.log(callerId);
-      const userId = parseInt(callerId.callerId);
+      const userId = parseInt(callerId);
       console.log(userId);
-      await this.userService.updateUserAttending(userId, attending); // Ensure userId is passed correctly
+      await this.userService.updateUserAttending(userId, attending);
       await this.messagesService.delete(savedMessage.id);
     }
-
+  
     this.server.emit('calledAppointment', appointmentInfo);
-    client.emit('calledAppointment', savedMessage);
+    client.emit('calledAppointment', appointmentInfo); // Emit appointmentInfo instead of savedMessage
   }
+  
 
   @SubscribeMessage('generateTicket')
   async handleGenerateTicket(client: any, payload) {
@@ -62,24 +71,24 @@ export class ChatGateway {
 
       // Fetch the last message of the specified type from the Messages table
       const lastMessage = await this.chatService.findLastMessageByType(type);
-  
+
       // If a message of the specified type exists, increment its ticket number by 1 and save it
       if (lastMessage) {
         const newTicket = await this.chatService.generateTicket(type, priority); // Generate a new ticket
         return newTicket;
       }
-  
+
       // Fetch the last ticket of the specified type from the Done table
       const lastTicket = await this.chatService.findLastByType(type);
-  
+
       // If a ticket of the specified type exists, use its information
       if (lastTicket) {
         return lastTicket;
       }
-  
+
       // If no message or ticket of the specified type exists, generate a new ticket
       const newTicket = await this.chatService.generateTicket(type, priority);
-  
+
       // Return the generated ticket information
       client.emit('generatedTicket', newTicket);
       return newTicket;
