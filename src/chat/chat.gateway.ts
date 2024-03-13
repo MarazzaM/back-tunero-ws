@@ -42,25 +42,31 @@ export class ChatGateway {
   
     const savedMessage = await this.messagesService.findPriorityMessage();
     console.log(savedMessage);
-    const attending = JSON.stringify(savedMessage);
-  
+    // const attending = JSON.stringify(savedMessage);
+    
     const appointmentInfo = {
       callerId,
       appointment: savedMessage,
       position: position, // Ensure position is correctly assigned here
     };
-  
+    
     if ('id' in savedMessage) {
       console.log(callerId);
       const userId = parseInt(callerId);
       console.log(userId);
-      await this.userService.updateUserAttending(userId, attending);
+      // Un-comment to assign the attendance to the user, this is used to preserve the attendee between browsers
+      // await this.userService.updateUserAttending(userId, attending);
       await this.messagesService.delete(savedMessage.id);
     }
-  
+    const queue = await this.messagesService.findQueue();
+    this.server.emit('updatedQueue', queue); //updates the queue server-wide
     this.server.emit('calledAppointment', appointmentInfo);
-    client.emit('calledAppointment', appointmentInfo); // Emit appointmentInfo instead of savedMessage
+    client.emit('calledAppointmentClient', appointmentInfo); // Emit appointmentInfo to the client
+  
+    // Resolve the promise without returning any value
+    return;
   }
+  
   
 
   @SubscribeMessage('generateTicket')
@@ -68,28 +74,11 @@ export class ChatGateway {
     try {
       const { type } = payload;
       const { priority } = payload;
-
-      // Fetch the last message of the specified type from the Messages table
-      const lastMessage = await this.chatService.findLastMessageByType(type);
-
-      // If a message of the specified type exists, increment its ticket number by 1 and save it
-      if (lastMessage) {
-        const newTicket = await this.chatService.generateTicket(type, priority); // Generate a new ticket
-        return newTicket;
-      }
-
-      // Fetch the last ticket of the specified type from the Done table
-      const lastTicket = await this.chatService.findLastByType(type);
-
-      // If a ticket of the specified type exists, use its information
-      if (lastTicket) {
-        return lastTicket;
-      }
-
-      // If no message or ticket of the specified type exists, generate a new ticket
-      const newTicket = await this.chatService.generateTicket(type, priority);
-
-      // Return the generated ticket information
+      const newTicket = await this.chatService.generateTicket(type, priority); // Generate a new ticket
+      // console.log(newTicket)
+      const queue = await this.messagesService.findQueue();
+      this.server.emit('updatedQueue', queue); //updates the queue server-wide
+      // console.log(queue)
       client.emit('generatedTicket', newTicket);
       return newTicket;
     } catch (error) {

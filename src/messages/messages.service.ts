@@ -59,4 +59,20 @@ export class MessagesService {
     }
   }
   
+
+  async findQueue() {
+    // Find the five oldest messages with priority, ordered by priority and then by timestamp
+    const priorityMessages = await this.prisma.message.findMany({
+      where: { priority: { not: null } }, // Filter by priority not being null
+      orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }], // Order by priority descending and timestamp ascending
+      take: 5, // Limit the results to 5
+    });
+  
+    if (priorityMessages.length > 0) {
+      return priorityMessages;
+    } else {
+      // If no priority messages are found, return a message indicating that there are no more people in the queue
+      return [{ content: "No more people in queue" }];
+    }
+  }
 }

@@ -27,27 +27,33 @@ export class ChatService {
 
   async generateTicket(type: string, priority: number) {
     try {
-      // Fetch the last ticket of the specified type from the Messages table
+      // Fetch the last ticket from the Messages table
       const lastMessage = await this.findLastMessageByType(type);
+      // Fetch the last ticket from the Done table
+      const lastDoneTicket = await this.findLastByType(type);
 
       // Determine the ticket number
-      let ticketNumber = '1'; // Default to 1 if no previous ticket exists
+      let ticketNumber = 1; // Default to 1 if no previous ticket exists
 
-      if (lastMessage) {
-        // If a previous ticket exists, increment its number by 1
-        const lastTicketNumber = parseInt(lastMessage.number.substring(1));
-        ticketNumber = String(lastTicketNumber + 1);
+      // Extract the numerical part of the ticket number from lastMessage and lastDoneTicket
+      const lastMessageNumber = lastMessage ? parseInt(lastMessage.number.substring(1)) : 0;
+      const lastDoneTicketNumber = lastDoneTicket ? parseInt(lastDoneTicket.number.substring(1)) : 0;
+
+      // Use the highest ticket number between lastMessage and lastDoneTicket
+      if (lastMessageNumber > 0 || lastDoneTicketNumber > 0) {
+        const highestTicketNumber = Math.max(lastMessageNumber, lastDoneTicketNumber);
+        ticketNumber = highestTicketNumber + 1; // Increment the highest ticket number by 1
       }
 
       // Generate the ticket number with the first letter of the type and the incremented number
-      const newTicketNumber = type.charAt(0).toUpperCase() + ticketNumber;
+      const newTicketNumber = type.charAt(0).toUpperCase() + ticketNumber.toString();
 
       // Create a new ticket with the specified type and ticket number
       const newTicket = await this.prisma.message.create({
         data: {
           type: type,
           number: newTicketNumber,
-          priority: priority
+          priority: priority,
         },
       });
 
